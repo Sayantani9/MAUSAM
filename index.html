@@ -1,267 +1,205 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mausam - Next-Gen Weather Intelligence</title>
+    <title>Mausam - iOS Weather</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
-                    colors: {
-                        darkbg: '#030712',
-                        cardbg: '#0b0f19',
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', "Segoe UI", 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     <style>
-        @keyframes pulseGlow {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.05); }
+        /* Apple-style translucent frosted glass cards */
+        .apple-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .glow-bg {
-            animation: pulseGlow 8s infinite ease-in-out;
-        }
-        .glass-panel {
-            background: rgba(11, 15, 25, 0.75);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        /* Hide scrollbars for clean iOS aesthetic */
+        ::-webkit-scrollbar {
+            display: none;
         }
     </style>
 </head>
-<body class="bg-darkbg text-slate-100 font-sans min-h-screen selection:bg-blue-500 selection:text-white relative overflow-x-hidden">
+<body id="bodyBg" class="bg-blue-600 text-white font-sans min-h-screen flex justify-center items-center p-0 sm:p-6 transition-colors duration-1000">
 
-    <!-- Background Ambient Glow Effects -->
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-tr from-blue-600/20 via-indigo-600/20 to-cyan-400/10 blur-[120px] rounded-full pointer-events-none glow-bg"></div>
-
-    <!-- Navigation Bar -->
-    <nav class="max-w-6xl mx-auto px-6 py-6 flex justify-between items-center relative z-10">
-        <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/30">M</div>
-            <span class="font-extrabold text-lg tracking-tight">Mausam<span class="text-blue-500">.ai</span></span>
-        </div>
-        <div class="flex items-center space-x-4">
-            <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full flex items-center space-x-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>System Operational</span>
-            </span>
-            <a href="#appSimulator" class="text-xs font-mono px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 transition shadow-lg shadow-blue-600/30 font-semibold">Launch App &rarr;</a>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <header class="max-w-4xl mx-auto px-6 pt-16 pb-12 text-center relative z-10">
-        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-mono text-slate-400 mb-6 shadow-sm">
-            <span class="text-blue-400 font-bold">PS-26076</span>
-            <span>&bull;</span>
-            <span>Personalized National Weather Engine</span>
-        </div>
+    <!-- Mobile Frame Container simulating iPhone -->
+    <div id="appContainer" class="w-full max-w-md min-h-screen sm:min-h-[850px] sm:rounded-[48px] shadow-2xl flex flex-col transition-all duration-1000 bg-gradient-to-b from-blue-400 via-blue-500 to-blue-700 overflow-hidden relative border-[8px] border-slate-900/10">
         
-        <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-tight mb-6 bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-            Context-Aware Weather Intelligence for Every <span class="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Persona</span>.
-        </h1>
-        
-        <p class="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Transforming standard meteorological data into dynamic, actionable insights tailored precisely for health-conscious users, farmers, commuters, fitness runners, and beachgoers.
-        </p>
-
-        <div class="flex flex-col sm:flex-row justify-center items-center space-y-3 sm:space-y-0 sm:space-x-4">
-            <a href="#appSimulator" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:opacity-95 transition font-semibold text-sm shadow-xl shadow-blue-500/20 flex items-center justify-center space-x-2">
-                <span>Try Interactive Prototype</span>
-                <span class="font-mono">&darr;</span>
-            </a>
-            <a href="#features" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl glass-panel hover:bg-slate-800/80 transition font-semibold text-sm text-slate-300">
-                Explore Architecture
-            </a>
-        </div>
-    </header>
-
-    <!-- Interactive App Simulator Workspace (Landing to App Component) -->
-    <section id="appSimulator" class="max-w-md mx-auto px-4 py-12 relative z-10">
-        <div class="text-center mb-6">
-            <h2 class="text-xs font-mono text-blue-400 uppercase tracking-widest mb-1">Live Sandbox</h2>
-            <p class="text-xl font-bold">Experience the Dynamic Interface</p>
-        </div>
-
-        <!-- Phone App Frame Container -->
-        <div class="glass-panel rounded-3xl shadow-2xl overflow-hidden border border-slate-800 flex flex-col relative">
-            
-            <!-- Dynamic Sky & Weather Header -->
-            <div id="appHeader" class="p-6 text-white bg-gradient-to-br from-blue-600 via-indigo-600 to-sky-500 transition-all duration-700 shadow-md relative">
-                <div class="flex justify-between items-center mb-4">
-                    <div>
-                        <div class="flex items-center space-x-2">
-                            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span class="text-xs font-bold tracking-tight">Mausam <span class="px-1.5 py-0.2 bg-black/20 rounded font-mono text-[10px]">v2.6</span></span>
-                        </div>
-                        <p id="skyStatusText" class="text-xs text-white/90 font-medium mt-0.5">Live Sky: Clear Blue Day</p>
-                    </div>
-                </div>
-
-                <!-- Weather / Sky Simulator Control -->
-                <div>
-                    <label class="block text-[10px] uppercase tracking-wider font-mono font-bold text-white/70 mb-1">Simulate Real-World Sky Shade:</label>
-                    <select id="skyThemeSelect" onchange="updateSkyTheme()" class="w-full p-2.5 rounded-xl bg-black/30 backdrop-blur-xl border border-white/20 text-white text-xs font-semibold focus:outline-none cursor-pointer">
-                        <option value="clear" class="text-slate-900">☀️ Clear Blue Day</option>
-                        <option value="sunset" class="text-slate-900">🌅 Golden Hour / Sunset</option>
-                        <option value="rainy" class="text-slate-900">🌧️ Rainy Grey-Blue</option>
-                        <option value="stormy" class="text-slate-900">⚡ Stormy Charcoal</option>
-                        <option value="windy" class="text-slate-900">💨 Windy Cyan</option>
-                        <option value="night" class="text-slate-900">🌙 Night Sky</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Persona Selection Bar -->
-            <div class="p-4 bg-slate-900/80 border-b border-slate-800">
-                <label class="block text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-1.5">Select User Persona Context:</label>
-                <select id="personaSelect" onchange="updateDashboard()" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-sm font-medium text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
-                    <option value="health">🩺 Health-Conscious (AQI, Pollen, UV)</option>
-                    <option value="fitness">⚡ Outdoor Fitness (Running Hours, Wind)</option>
-                    <option value="beach">🌊 Beachgoers & Surfers (Tides, Waves)</option>
-                    <option value="agriculture">🌱 Agriculture & Gardeners (Soil, Frost)</option>
-                    <option value="commuter">🚗 Commuters (Traffic, Visibility)</option>
-                </select>
-            </div>
-
-            <!-- Dynamic Widget Container -->
-            <div id="widgetContainer" class="p-4 flex-1 space-y-3 bg-slate-950/60 min-h-[340px]">
-                <!-- Injected via JavaScript -->
-            </div>
-
-            <!-- Footer Badge -->
-            <div class="py-2.5 text-center bg-slate-900/80 border-t border-slate-800 text-[10px] font-mono text-slate-500">
-                IMD Mausam Hackathon Prototype
+        <!-- iOS Status Bar Simulation -->
+        <div class="px-7 pt-4 pb-2 flex justify-between items-center text-xs font-semibold text-white/90 tracking-wide select-none">
+            <span>9:41</span>
+            <div class="flex items-center space-x-2 text-[11px]">
+                <span>5G</span>
+                <span>🔋</span>
             </div>
         </div>
-    </section>
 
-    <!-- Architecture & Features Bento Grid -->
-    <section id="features" class="max-w-6xl mx-auto px-6 py-20 relative z-10 border-t border-slate-800/80">
-        <div class="text-center mb-16">
-            <h2 class="text-xs font-mono text-blue-400 uppercase tracking-wider mb-2">Architecture Spec</h2>
-            <h3 class="text-3xl font-extrabold">Engineered for Scale & Modularity</h3>
+        <!-- Atmospheric Sky & Weather Simulator Bar -->
+        <div class="px-6 py-2 bg-black/20 backdrop-blur-md mx-6 rounded-2xl flex justify-between items-center border border-white/10 mb-4 shadow-sm">
+            <span id="skyStatusText" class="text-xs font-medium tracking-tight">☀️ Clear Day Sky</span>
+            <select id="skyThemeSelect" onchange="updateSkyTheme()" class="bg-transparent text-xs font-semibold text-white focus:outline-none cursor-pointer">
+                <option value="clear" class="text-slate-900">☀️ Clear Sky</option>
+                <option value="sunset" class="text-slate-900">🌅 Sunset</option>
+                <option value="rainy" class="text-slate-900">🌧️ Rainy</option>
+                <option value="stormy" class="text-slate-900">⚡ Stormy</option>
+                <option value="windy" class="text-slate-900">💨 Windy</option>
+                <option value="night" class="text-slate-900">🌙 Night</option>
+            </select>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="glass-panel p-6 rounded-2xl">
-                <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-mono mb-4 font-bold">01</div>
-                <h4 class="font-bold text-base mb-2">Persona-Driven Indexing</h4>
-                <p class="text-sm text-slate-400 leading-relaxed">Decoupled widget rendering engine maps user profiles to targeted micro-weather metrics dynamically.</p>
+        <!-- Main Hero Weather Header (Apple Weather Style) -->
+        <header class="px-6 pt-2 pb-6 text-center select-none">
+            <h1 class="text-3xl font-medium tracking-tight">New Delhi</h1>
+            <p class="text-7xl font-light tracking-tighter my-1">28°</p>
+            <p class="text-lg font-medium text-white/90">Sunny</p>
+            <div class="flex justify-center space-x-3 text-sm font-medium text-white/80 mt-1">
+                <span>H: 32°</span>
+                <span>L: 21°</span>
             </div>
-            <div class="glass-panel p-6 rounded-2xl">
-                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 font-mono mb-4 font-bold">02</div>
-                <h4 class="font-bold text-base mb-2">Atmospheric Sky Sync</h4>
-                <p class="text-sm text-slate-400 leading-relaxed">Ambient color pipelines adjust gradients to match actual solar conditions, storms, or humidity layers.</p>
-            </div>
-            <div class="glass-panel p-6 rounded-2xl">
-                <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-mono mb-4 font-bold">03</div>
-                <h4 class="font-mono text-base mb-2">Low-Latency API</h4>
-                <p class="text-sm text-slate-400 leading-relaxed">Built for high concurrency and zero-lag client interactions across low-bandwidth environments.</p>
+        </header>
+
+        <!-- Persona Selection Pill Bar -->
+        <div class="px-6 mb-4">
+            <div class="flex space-x-2 overflow-x-auto pb-2 scrollbar-none" id="personaPills">
+                <!-- Injected via JS -->
             </div>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="max-w-6xl mx-auto px-6 py-8 border-t border-slate-900 text-center text-xs text-slate-500 font-mono">
-        &copy; 2026 Mausam Intelligence Initiative &bull; Developed for Smart India Hackathon
-    </footer>
+        <!-- Main Content Area / Apple Weather Modules -->
+        <div id="widgetContainer" class="px-6 flex-1 space-y-4 overflow-y-auto pb-10">
+            <!-- Dynamic Widgets Injected Here -->
+        </div>
+
+        <!-- iOS Home Indicator Bar -->
+        <div class="py-3 flex justify-center bg-transparent">
+            <div class="w-32 h-1 bg-white/40 rounded-full"></div>
+        </div>
+    </div>
 
     <script>
         const personaData = {
             health: [
-                { title: "Air Quality Index (AQI)", value: "142 (Unhealthy)", desc: "High particulate matter. Wear a mask outdoors.", tag: "AQI Alert" },
-                { title: "Pollen Count", value: "Moderate", desc: "Tree pollen levels elevated today. Take precautions.", tag: "Allergy Feed" },
-                { title: "UV Index", value: "6.5 (High)", desc: "Sun protection required between 11 AM - 3 PM.", tag: "Solar Guard" }
+                { title: "AIR QUALITY INDEX", subtitle: "142 • Unhealthy", desc: "High particulate matter detected. Consider wearing a mask outdoors." },
+                { title: "POLLEN COUNT", subtitle: "Moderate", desc: "Tree pollen levels are elevated today in your sector." },
+                { title: "UV INDEX", subtitle: "6.5 • High", desc: "Sun protection required. Peak intensity between 11 AM - 3 PM." }
             ],
             fitness: [
-                { title: "Best Running Hours", value: "05:30 AM - 07:00 AM", desc: "Optimal temperature and low pollution window.", tag: "Peak Time" },
-                { title: "Wind Speed & Direction", value: "12 km/h (W)", desc: "Mild breeze, favorable conditions for cycling.", tag: "Aero Track" },
-                { title: "Heat Stress Alert", value: "Normal", desc: "No extreme heat warnings issued for your route.", tag: "Safety Status" }
+                { title: "BEST RUNNING HOURS", subtitle: "05:30 AM - 07:00 AM", desc: "Optimal temperature window with lowest pollution levels." },
+                { title: "WIND SPEED", subtitle: "12 km/h W", desc: "Mild breeze, highly favorable conditions for outdoor cycling." },
+                { title: "HEAT STRESS", subtitle: "Normal", desc: "No extreme thermal alerts active along your usual route." }
             ],
             beach: [
-                { title: "Sea Conditions", value: "Moderate Swells", desc: "Water temp: 27°C. Safe for experienced swimmers.", tag: "Marine Feed" },
-                { title: "Tide Timings", value: "High Tide: 02:15 PM", desc: "Low Tide expected at 08:30 PM tonight.", tag: "Tide Radar" },
-                { title: "Wave Height", value: "1.8 Meters", desc: "Ideal surfing conditions near the north shore break.", tag: "Surf Intel" }
+                { title: "SEA CONDITIONS", subtitle: "Moderate Swells", desc: "Water temp: 27°C. Safe conditions for experienced swimmers." },
+                { title: "TIDE TIMINGS", subtitle: "High Tide: 02:15 PM", desc: "Low tide expected later tonight at 08:30 PM." },
+                { title: "WAVE HEIGHT", subtitle: "1.8 Meters", desc: "Good surf conditions near the north shore break." }
             ],
             agriculture: [
-                { title: "Soil Moisture", value: "34% (Optimal)", desc: "Adequate moisture levels for root growth in topsoil.", tag: "Agri Sensor" },
-                { title: "Rainfall Prediction", value: "4mm expected", desc: "Light localized showers likely by late evening.", tag: "Precip Forecast" },
-                { title: "Frost Alert", value: "None", desc: "No risk of sudden overnight temperature drops.", tag: "Crop Protection" }
+                { title: "SOIL MOISTURE", subtitle: "34% • Optimal", desc: "Adequate moisture levels registered for healthy root growth." },
+                { title: "RAINFALL PREDICTION", subtitle: "4mm Expected", desc: "Light localized showers likely by late evening hours." },
+                { title: "FROST ALERT", subtitle: "None", desc: "Zero risk of sudden overnight temperature drops." }
             ],
             commuter: [
-                { title: "Traffic & Weather Sync", value: "Moderate Delays", desc: "Light fog reducing visibility on highway corridor.", tag: "Route Sync" },
-                { title: "Visibility Range", value: "2.5 km", desc: "Turn on low-beam headlights during transit.", tag: "Atmosphere" },
-                { title: "Precipitation Alert", value: "Clear for Commute", desc: "No rain expected during standard office departure hours.", tag: "Commute Window" }
+                { title: "TRAFFIC & WEATHER", subtitle: "Moderate Delays", desc: "Light fog reducing visibility along the main highway corridor." },
+                { title: "VISIBILITY RANGE", subtitle: "2.5 km", desc: "Recommended to use low-beam headlights during transit." },
+                { title: "PRECIPITATION WINDOW", subtitle: "Clear for Commute", desc: "No rain expected during standard office departure hours." }
             ]
         };
 
         const skyThemes = {
             clear: {
-                headerClass: "from-blue-600 via-sky-500 to-cyan-500",
-                status: "Live Sky: Clear Blue Day ☀️"
+                gradient: "from-blue-400 via-blue-500 to-blue-700",
+                status: "☀️ Clear Day Sky"
             },
             sunset: {
-                headerClass: "from-amber-600 via-rose-600 to-purple-700",
-                status: "Live Sky: Golden Hour / Sunset 🌅"
+                gradient: "from-amber-500 via-rose-500 to-indigo-900",
+                status: "🌅 Golden Sunset"
             },
             rainy: {
-                headerClass: "from-slate-700 via-blue-800 to-slate-900",
-                status: "Live Sky: Rainy & Overcast 🌧️"
+                gradient: "from-slate-600 via-blue-800 to-slate-900",
+                status: "🌧️ Rainy & Overcast"
             },
             stormy: {
-                headerClass: "from-gray-900 via-zinc-900 to-black",
-                status: "Live Sky: Stormy & Dark ⚡"
+                gradient: "from-zinc-800 via-slate-900 to-black",
+                status: "⚡ Stormy Conditions"
             },
             windy: {
-                headerClass: "from-teal-600 via-cyan-700 to-blue-800",
-                status: "Live Sky: Windy Breeze 💨"
+                gradient: "from-teal-600 via-cyan-700 to-blue-900",
+                status: "💨 Windy Atmosphere"
             },
             night: {
-                headerClass: "from-slate-950 via-indigo-950 to-black",
-                status: "Live Sky: Clear Night Sky 🌙"
+                gradient: "from-slate-950 via-indigo-950 to-black",
+                status: "🌙 Night Sky"
             }
         };
 
+        let currentPersona = 'health';
+
         function updateSkyTheme() {
-            const selectedTheme = document.getElementById('skyThemeSelect').value;
-            const header = document.getElementById('appHeader');
-            const statusText = document.getElementById('skyStatusText');
-            
-            const themeConfig = skyThemes[selectedTheme];
-            header.className = `p-6 text-white bg-gradient-to-br ${themeConfig.headerClass} transition-all duration-700 shadow-md relative`;
-            statusText.innerText = themeConfig.status;
+            const themeKey = document.getElementById('skyThemeSelect').value;
+            const container = document.getElementById('appContainer');
+            const theme = skyThemes[themeKey];
+
+            container.className = `w-full max-w-md min-h-screen sm:min-h-[850px] sm:rounded-[48px] shadow-2xl flex flex-col transition-all duration-1000 bg-gradient-to-b ${theme.gradient} overflow-hidden relative border-[8px] border-slate-900/10`;
+            document.getElementById('skyStatusText').innerText = theme.status;
+        }
+
+        const personaLabels = [
+            { id: 'health', name: '🩺 Health' },
+            { id: 'fitness', name: '⚡ Fitness' },
+            { id: 'beach', name: '🌊 Beach' },
+            { id: 'agriculture', name: '🌱 Agri' },
+            { id: 'commuter', name: '🚗 Commute' }
+        ];
+
+        function renderPills() {
+            const pillsContainer = document.getElementById('personaPills');
+            pillsContainer.innerHTML = '';
+            personaLabels.forEach(p => {
+                const isActive = currentPersona === p.id;
+                const btn = document.createElement('button');
+                btn.className = `px-3.5 py-1.5 rounded-full text-xs font-medium tracking-tight whitespace-nowrap transition-all ${isActive ? 'bg-white text-slate-900 font-semibold shadow-md' : 'bg-white/20 text-white hover:bg-white/30'}`;
+                btn.innerText = p.name;
+                btn.onclick = () => {
+                    currentPersona = p.id;
+                    renderPills();
+                    updateDashboard();
+                };
+                pillsContainer.appendChild(btn);
+            });
         }
 
         function updateDashboard() {
-            const selectedPersona = document.getElementById('personaSelect').value;
             const container = document.getElementById('widgetContainer');
-            const widgets = personaData[selectedPersona];
+            const widgets = personaData[currentPersona];
 
             container.innerHTML = '';
 
-            widgets.forEach((widget, index) => {
+            widgets.forEach(widget => {
                 const card = document.createElement('div');
-                card.className = `glass-panel p-3.5 rounded-2xl shadow-lg transition-all duration-300 hover:border-slate-700`;
+                card.className = `apple-card p-4 rounded-3xl shadow-lg transition-all duration-300`;
                 card.innerHTML = `
-                    <div class="flex justify-between items-center mb-1">
-                        <h3 class="font-bold text-xs text-slate-100 tracking-tight">${widget.title}</h3>
-                        <span class="text-[9px] font-mono px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 font-semibold border border-blue-500/30">${widget.tag}</span>
-                    </div>
-                    <p class="text-base font-extrabold mb-0.5 text-white tracking-tight">${widget.value}</p>
-                    <p class="text-[11px] text-slate-400 leading-relaxed">${widget.desc}</p>
+                    <div class="text-[10px] font-bold tracking-widest text-white/70 uppercase mb-1">${widget.title}</div>
+                    <div class="text-xl font-semibold tracking-tight text-white mb-1.5">${widget.subtitle}</div>
+                    <div class="text-xs text-white/80 leading-relaxed font-normal border-t border-white/10 pt-2">${widget.desc}</div>
                 `;
                 container.appendChild(card);
             });
         }
 
         window.onload = () => {
+            renderPills();
             updateDashboard();
-            updateSkyTheme();
         };
     </script>
 </body>
