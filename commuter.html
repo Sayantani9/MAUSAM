@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mausam - Commuter & Transit Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', "Segoe UI", 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(28, 34, 48, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-[#0b0e17] text-white font-sans min-h-screen flex justify-center items-center p-0 lg:p-6 overflow-hidden">
+
+    <div class="w-full max-w-[1280px] h-screen lg:h-[820px] lg:rounded-3xl bg-[#0f131f] shadow-2xl flex flex-col overflow-hidden border border-slate-800/80">
+        
+        <!-- Header Bar -->
+        <div class="px-8 py-4 border-b border-slate-800/60 flex justify-between items-center bg-[#131722]/80 backdrop-blur-md">
+            <div class="flex items-center space-x-3">
+                <a href="index.html" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 transition">&larr; Back to Main</a>
+                <h1 class="text-lg font-bold tracking-tight text-blue-400">🚗 Mausam Marg (Commuter & Transit Weather Hub)</h1>
+            </div>
+            <div class="text-xs text-slate-400 font-mono">IMD Transportation Weather Division</div>
+        </div>
+
+        <!-- Main Workspace: Split Screen (Route Inputs vs Live Route Intelligence & Alerts) -->
+        <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden">
+            
+            <!-- Left Panel: Route Inputs (Cols 1-5) -->
+            <div class="lg:col-span-5 p-6 border-r border-slate-800/80 overflow-y-auto space-y-6 bg-[#131722]/40">
+                
+                <div class="glass-card p-5 rounded-2xl">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-blue-400 mb-3">1. Configure Commute Parameters</h2>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Starting Location (From):</label>
+                            <input id="fromInput" type="text" value="Connaught Place, New Delhi" class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Destination (To):</label>
+                            <input id="toInput" type="text" value="Cyber City, Gurugram" class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Mode of Transport:</label>
+                            <select id="transportInput" class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none">
+                                <option value="Car" selected>🚗 Car / Four-Wheeler</option>
+                                <option value="Bike">🏍️ Two-Wheeler / Scooter</option>
+                                <option value="Metro">🚇 Public Transit / Metro</option>
+                                <option value="Cycling">🚲 Bicycle</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Target Departure Time:</label>
+                            <input id="timeInput" type="time" value="08:30" class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none">
+                        </div>
+                        <button onclick="updateCommuteData()" class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 font-semibold text-xs tracking-wider uppercase transition shadow-lg shadow-blue-600/30">
+                            Calculate Route Weather &rarr;
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Route Overview Card -->
+                <div class="glass-card p-4 rounded-2xl space-y-2">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase">ACTIVE TRANSIT PATH</div>
+                    <div class="text-sm font-semibold text-white flex items-center justify-between">
+                        <span id="displayRoute" class="truncate">Connaught Place ➔ Cyber City</span>
+                        <span id="displayMode" class="text-xs px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded-full">Car</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Dynamic Route Weather & Alerts (Cols 6-12) -->
+            <div class="lg:col-span-7 p-6 flex flex-col justify-between overflow-y-auto bg-[#0f131f] space-y-6">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="w-2.5 h-2.5 rounded-full bg-blue-400 animate-pulse"></span>
+                        <h2 class="text-sm font-bold tracking-tight text-white">Live Route Weather & Traffic Sync</h2>
+                    </div>
+
+                    <!-- Bento Grid for Commuter Metrics -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                        <div class="glass-card p-4 rounded-2xl">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase">VISIBILITY RANGE</div>
+                            <div id="visibilityVal" class="text-lg font-bold text-amber-300 mt-1">1.8 km (Mist / Light Fog)</div>
+                            <div class="text-[11px] text-slate-400 mt-1">Low-beam headlamps recommended along highway stretch.</div>
+                        </div>
+                        <div class="glass-card p-4 rounded-2xl">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase">PRECIPITATION / RAIN ALERTS</div>
+                            <div id="rainVal" class="text-lg font-bold text-blue-300 mt-1">3 mm expected</div>
+                            <div class="text-[11px] text-slate-400 mt-1">Slick road conditions near expressway cloverleaf.</div>
+                        </div>
+                        <div class="glass-card p-4 rounded-2xl">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase">RECOMMENDED DEPARTURE</div>
+                            <div id="departureVal" class="text-lg font-bold text-emerald-300 mt-1">08:15 AM (Optimal)</div>
+                            <div class="text-[11px] text-slate-400 mt-1">Clearing weather window starts 15 mins prior.</div>
+                        </div>
+                        <div class="glass-card p-4 rounded-2xl">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase">WIND & GUST ADVISORY</div>
+                            <div id="windVal" class="text-lg font-bold text-cyan-300 mt-1">18 km/h NW Gusts</div>
+                            <div id="windDesc" class="text-[11px] text-slate-400 mt-1">Minor side-wind impact for high-profile vehicles.</div>
+                        </div>
+                    </div>
+
+                    <!-- AI Route Safety Summary Box -->
+                    <div class="glass-card p-4 rounded-2xl border-l-4 border-l-blue-500">
+                        <div class="text-[10px] font-mono text-blue-400 mb-1">Mausam AI Transit Advisor</div>
+                        <p id="aiSummaryText" class="text-xs text-slate-200 leading-relaxed">
+                            Your commute from **Connaught Place** to **Cyber City** via **Car** at **08:30** will encounter patches of early morning mist reducing visibility. No major waterlogging reported on the primary expressway route.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Footer Action -->
+                <div class="pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
+                    <span>Synced with IMD Doppler Radar & Traffic Feeds</span>
+                    <a href="index.html" class="text-blue-400 hover:underline">Return to Home Dashboard &rarr;</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function updateCommuteData() {
+            const from = document.getElementById('fromInput').value || 'Connaught Place';
+            const to = document.getElementById('toInput').value || 'Cyber City';
+            const transport = document.getElementById('transportInput').value;
+            const time = document.getElementById('timeInput').value || '08:30';
+
+            // Update route display labels
+            document.getElementById('displayRoute').innerText = `${from} ➔ ${to}`;
+            document.getElementById('displayMode').innerText = transport;
+
+            // Customize advice based on transport mode
+            let windNote = "Minor side-wind impact for high-profile vehicles.";
+            if (transport === 'Bike' || transport === 'Cycling') {
+                windNote = "⚠️ Caution: 18 km/h wind gusts combined with wet roads increase skid risk for two-wheelers.";
+            } else if (transport === 'Metro') {
+                windNote = "Underground transit unaffected by surface wind or rain conditions.";
+            }
+            document.getElementById('windDesc').innerText = windNote;
+
+            // Update AI summary text dynamically
+            document.getElementById('aiSummaryText').innerHTML = `
+                Your commute from <b>${from}</b> to <b>${to}</b> using <b>${transport}</b> departing at <b>${time}</b> will encounter early morning mist and light drizzle. ${transport === 'Bike' ? 'Wear waterproof gear and maintain extra braking distance.' : 'Drive with low-beam headlamps active.'}
+            `;
+        }
+    </script>
+</body>
+</html>
