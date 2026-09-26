@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mausam - Apple Weather Desktop</title>
+    <title>Mausam - Apple Weather Desktop Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
@@ -12,12 +12,6 @@
                 extend: {
                     fontFamily: {
                         sans: ['-apple-system', 'BlinkMacSystemFont', "Segoe UI", 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
-                    },
-                    colors: {
-                        appbg: '#0f131f',
-                        sidebar: '#141824',
-                        cardbg: '#1c2230',
-                        cardborder: 'rgba(255, 255, 255, 0.08)',
                     }
                 }
             }
@@ -51,89 +45,38 @@
 </head>
 <body class="bg-[#0b0e17] text-white font-sans min-h-screen flex justify-center items-center p-0 lg:p-6 overflow-hidden">
 
-    <!-- Desktop App Window Frame (Matches Screenshot Layout) -->
-    <div class="w-full max-w-[1280px] h-screen lg:h-[820px] lg:rounded-3xl bg-[#0f131f] shadow-2xl flex overflow-hidden border border-slate-800/80">
+    <!-- Desktop App Window Frame -->
+    <div class="w-full max-w-[1280px] h-screen lg:h-[820px] lg:rounded-3xl bg-[#0f131f] shadow-2xl flex overflow-hidden border border-slate-800/80 relative">
         
-        <!-- LEFT SIDEBAR: City List & Search -->
+        <!-- LEFT SIDEBAR: City List -->
         <div class="w-80 bg-[#131722] border-r border-slate-800/80 flex flex-col hidden md:flex">
-            <!-- Search Bar -->
             <div class="p-4 border-b border-slate-800/60">
                 <div class="flex items-center space-x-2 bg-[#1b2030] px-3.5 py-2 rounded-xl border border-slate-700/50 text-slate-400 text-xs">
                     <span>🔍</span>
-                    <input type="text" placeholder="Search" class="bg-transparent focus:outline-none w-full text-white placeholder-slate-500 text-xs">
+                    <input type="text" placeholder="Search city..." class="bg-transparent focus:outline-none w-full text-white placeholder-slate-500 text-xs">
                 </div>
             </div>
 
-            <!-- City Cards List -->
             <div class="flex-1 overflow-y-auto p-4 space-y-3">
                 <div class="sidebar-item p-3.5 rounded-2xl cursor-pointer">
                     <div class="flex justify-between items-start">
-                        <div>
-                            <div class="text-xs text-slate-400">Chennai</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">My Location • Home</div>
-                        </div>
+                        <div><div class="text-xs text-slate-400">Chennai</div><div class="text-[10px] text-slate-500 mt-0.5">Home</div></div>
                         <div class="text-xl font-semibold">29°</div>
                     </div>
-                    <div class="flex justify-between items-center mt-3 text-[11px] text-slate-400">
-                        <span>Mostly Clear</span>
-                        <span>H:36° L:28°</span>
-                    </div>
                 </div>
-
-                <div class="sidebar-item p-3.5 rounded-2xl cursor-pointer">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <div class="text-xs text-slate-400">Kolkata</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">11:48 PM</div>
-                        </div>
-                        <div class="text-xl font-semibold">27°</div>
-                    </div>
-                    <div class="flex justify-between items-center mt-3 text-[11px] text-slate-400">
-                        <span>Mostly Clear</span>
-                        <span>H:32° L:26°</span>
-                    </div>
-                </div>
-
-                <!-- Active City (New Delhi) -->
                 <div class="sidebar-item active p-3.5 rounded-2xl cursor-pointer shadow-lg">
                     <div class="flex justify-between items-start">
                         <div>
-                            <div class="text-sm font-bold text-white">New Delhi</div>
-                            <div class="text-[10px] text-blue-300 mt-0.5">11:48 PM</div>
+                            <div class="text-sm font-bold text-white" id="sidebarCityName">New Delhi</div>
+                            <div class="text-[10px] text-blue-300 mt-0.5" id="sidebarContextSub">Active Route / Profile</div>
                         </div>
                         <div class="text-2xl font-bold">22°</div>
                     </div>
-                    <div class="flex justify-between items-center mt-3 text-[11px] text-blue-200">
-                        <span>Drizzle</span>
-                        <span>H:28° L:22°</span>
-                    </div>
                 </div>
-
                 <div class="sidebar-item p-3.5 rounded-2xl cursor-pointer">
                     <div class="flex justify-between items-start">
-                        <div>
-                            <div class="text-xs text-slate-400">Mumbai</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">11:48 PM</div>
-                        </div>
+                        <div><div class="text-xs text-slate-400">Mumbai</div><div class="text-[10px] text-slate-500 mt-0.5">Coastal Zone</div></div>
                         <div class="text-xl font-semibold">27°</div>
-                    </div>
-                    <div class="flex justify-between items-center mt-3 text-[11px] text-slate-400">
-                        <span>Cloudy</span>
-                        <span>H:31° L:27°</span>
-                    </div>
-                </div>
-
-                <div class="sidebar-item p-3.5 rounded-2xl cursor-pointer">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <div class="text-xs text-slate-400">Bengaluru</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">11:48 PM</div>
-                        </div>
-                        <div class="text-xl font-semibold">22°</div>
-                    </div>
-                    <div class="flex justify-between items-center mt-3 text-[11px] text-slate-400">
-                        <span>Mostly Clear</span>
-                        <span>H:29° L:20°</span>
                     </div>
                 </div>
             </div>
@@ -142,21 +85,20 @@
         <!-- RIGHT MAIN DASHBOARD CONTENT -->
         <div class="flex-1 flex flex-col overflow-y-auto bg-gradient-to-b from-[#161b2c] to-[#0f131f]">
             
-            <!-- Top Header & Persona Selector Bar -->
+            <!-- Top Header & Persona Selector -->
             <div class="px-8 py-4 border-b border-slate-800/60 flex flex-col sm:flex-row justify-between items-center bg-[#131722]/50 backdrop-blur-md sticky top-0 z-20">
                 <div>
-                    <h1 class="text-xl font-bold tracking-tight">New Delhi</h1>
-                    <p class="text-xs text-slate-400">Drizzle &bull; H: 28° L: 22°</p>
+                    <h1 class="text-xl font-bold tracking-tight" id="headerTitle">New Delhi</h1>
+                    <p class="text-xs text-slate-400" id="headerSubtitle">Drizzle &bull; H: 28° L: 22°</p>
                 </div>
-                <!-- Persona Switching Control -->
-                <div class="flex items-center space-x-2 mt-2 sm:mt-0">
-                    <span class="text-xs text-slate-400 font-medium">Active Persona:</span>
-                    <select id="personaSelect" onchange="updateDashboard()" class="bg-[#1c2230] border border-slate-700 text-xs font-semibold px-3 py-1.5 rounded-xl text-blue-400 focus:outline-none cursor-pointer">
-                        <option value="commuter">🚗 Commuter & Traffic</option>
+                <div class="flex items-center space-x-3 mt-2 sm:mt-0">
+                    <span class="text-xs text-slate-400 font-medium">Persona:</span>
+                    <select id="personaSelect" onchange="handlePersonaChange()" class="bg-[#1c2230] border border-slate-700 text-xs font-semibold px-3 py-1.5 rounded-xl text-blue-400 focus:outline-none cursor-pointer">
+                        <option value="commuter">🚗 Commuter (From/To)</option>
+                        <option value="running">🏃 Running (From/To)</option>
+                        <option value="agriculture">🌱 Agriculture (Crop Info)</option>
                         <option value="health">🩺 Health & AQI</option>
-                        <option value="fitness">⚡ Fitness & Running</option>
                         <option value="beach">🌊 Beach & Tides</option>
-                        <option value="agriculture">🌱 Agriculture & Soil</option>
                     </select>
                 </div>
             </div>
@@ -164,159 +106,194 @@
             <!-- Main Scrollable Weather Area -->
             <div class="p-8 space-y-6">
                 
-                <!-- Hero City Summary Banner -->
-                <div class="text-center py-4 relative">
+                <!-- Hero Banner -->
+                <div class="text-center py-2 relative">
                     <div class="text-6xl font-extralight tracking-tighter mb-1">22°</div>
-                    <div class="text-lg font-medium text-slate-200">Drizzle</div>
-                    <div class="text-xs text-slate-400 mt-1">H:28° &bull; L:22°</div>
+                    <div class="text-lg font-medium text-slate-200" id="heroCondition">Drizzle</div>
+                    <div class="text-xs text-slate-400 mt-1" id="activeParamDisplay">Customized profile active</div>
                 </div>
 
                 <!-- Hourly Forecast Bar -->
                 <div class="glass-card p-4 rounded-2xl">
-                    <p class="text-xs text-slate-400 mb-3 font-medium">Cloudy conditions expected around 3AM. Wind gusts are up to 18 kph.</p>
+                    <p class="text-xs text-slate-400 mb-3 font-medium" id="hourlyNotice">Cloudy conditions expected around 3AM. Wind gusts up to 18 kph.</p>
                     <div class="flex justify-between items-center overflow-x-auto space-x-6 pb-2 text-center text-xs">
                         <div><div class="text-slate-400 mb-2">Now</div><div>🌧️</div><div class="mt-2 font-semibold">22°</div></div>
                         <div><div class="text-slate-400 mb-2">12AM</div><div>🌧️</div><div class="text-[10px] text-blue-400 mb-1">55%</div><div class="font-semibold">22°</div></div>
-                        <div><div class="text-slate-400 mb-2">1AM</div><div>🌧️</div><div class="text-[10px] text-blue-400 mb-1">45%</div><div class="font-semibold">22°</div></div>
                         <div><div class="text-slate-400 mb-2">2AM</div><div>🌧️</div><div class="text-[10px] text-blue-400 mb-1">35%</div><div class="font-semibold">22°</div></div>
-                        <div><div class="text-slate-400 mb-2">3AM</div><div>☁️</div><div class="font-semibold">22°</div></div>
                         <div><div class="text-slate-400 mb-2">4AM</div><div>☁️</div><div class="font-semibold">22°</div></div>
-                        <div><div class="text-slate-400 mb-2">5AM</div><div>☁️</div><div class="font-semibold">21°</div></div>
                         <div><div class="text-slate-400 mb-2">6AM</div><div>☁️</div><div class="font-semibold">21°</div></div>
-                        <div><div class="text-slate-400 mb-2">6:12AM</div><div>🌅</div><div class="text-[10px] text-amber-400 mb-1">Sunrise</div><div class="font-semibold">22°</div></div>
-                        <div><div class="text-slate-400 mb-2">7AM</div><div>☀️</div><div class="font-semibold">22°</div></div>
                         <div><div class="text-slate-400 mb-2">8AM</div><div>☀️</div><div class="font-semibold">23°</div></div>
-                        <div><div class="text-slate-400 mb-2">9AM</div><div>☀️</div><div class="font-semibold">25°</div></div>
                         <div><div class="text-slate-400 mb-2">10AM</div><div>☀️</div><div class="font-semibold">26°</div></div>
-                        <div><div class="text-slate-400 mb-2">11AM</div><div>☀️</div><div class="font-semibold">27°</div></div>
+                        <div><div class="text-slate-400 mb-2">12PM</div><div>☀️</div><div class="font-semibold">28°</div></div>
                     </div>
                 </div>
 
-                <!-- Bento Grid Layout Matching Screenshot -->
+                <!-- Bento Grid Layout -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    
-                    <!-- Left: 10-Day Forecast Column -->
                     <div class="glass-card p-5 rounded-2xl lg:col-span-1 flex flex-col">
                         <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center space-x-2">
                             <span>📅</span><span>10-Day Forecast</span>
                         </div>
-                        <div id="forecastList" class="space-y-3.5 flex-1">
-                            <!-- Populated dynamically -->
-                        </div>
+                        <div id="forecastList" class="space-y-3.5 flex-1"></div>
                     </div>
 
-                    <!-- Right 2 Columns: Dynamic Persona Bento Cards -->
-                    <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6" id="bentoWidgets">
-                        <!-- Populated dynamically -->
-                    </div>
-
+                    <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6" id="bentoWidgets"></div>
                 </div>
+            </div>
+        </div>
+
+        <!-- INPUT MODAL POPUP -->
+        <div id="inputModal" class="absolute inset-0 bg-black/80 backdrop-blur-md z-50 flex justify-center items-center p-4">
+            <div class="glass-card max-w-md w-full p-6 rounded-3xl border border-slate-700 shadow-2xl">
+                <h3 id="modalTitle" class="text-lg font-bold mb-2">Configure Commute Route</h3>
+                <p id="modalDesc" class="text-xs text-slate-400 mb-4">Provide starting point and destination to get tailored weather and visibility updates.</p>
+                
+                <div id="modalFormFields" class="space-y-4 mb-6">
+                    <!-- Dynamic fields injected here -->
+                </div>
+
+                <button onclick="submitModalInputs()" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 font-semibold text-xs tracking-wider uppercase transition shadow-lg shadow-blue-600/30">
+                    Generate Personalized Weather &rarr;
+                </button>
             </div>
         </div>
     </div>
 
     <script>
+        let userInputs = {
+            from: "Connaught Place",
+            to: "Gurugram Cyber City",
+            crop: "Wheat",
+            soilStage: "Vegetative Phase"
+        };
+
         const personaData = {
             commuter: {
-                forecast: [
-                    { day: "Today", icon: "🌧️", chance: "90%", tempLow: "22°", tempHigh: "28°", bar: "w-3/4" },
-                    { day: "Sun", icon: "🌧️", chance: "90%", tempLow: "21°", tempHigh: "29°", bar: "w-4/5" },
-                    { day: "Mon", icon: "☁️", chance: "50%", tempLow: "21°", tempHigh: "30°", bar: "w-1/2" },
-                    { day: "Tue", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "33°", bar: "w-full" },
-                    { day: "Wed", icon: "☀️", chance: "", tempLow: "24°", tempHigh: "34°", bar: "w-full" },
-                    { day: "Thu", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "34°", bar: "w-full" },
-                    { day: "Fri", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "34°", bar: "w-full" },
-                    { day: "Sat", icon: "☀️", chance: "", tempLow: "22°", tempHigh: "33°", bar: "w-full" }
-                ],
-                widgets: [
-                    { title: "TRAFFIC & WEATHER SYNC", val: "Moderate Delays", desc: "Light fog reducing visibility on highway corridor." },
-                    { title: "VISIBILITY RANGE", val: "2.5 km", desc: "Drive with low-beam headlights on during transit." },
-                    { title: "PRECIPITATION MAP", val: "4 mm", desc: "2 mm expected in next 24h around major intersections." },
-                    { title: "COMMUTE WINDOW", val: "Clear 8AM-10AM", desc: "No major rainstorms predicted during peak office hours." }
+                title: "Commuter Transit Intelligence",
+                widgets: (i) => [
+                    { title: "ROUTE WEATHER SYNC", val: "Moderate Delays", desc: `Fog & mist reported between ${i.from} and ${i.to}. Low visibility warning.` },
+                    { title: "VISIBILITY CORRIDOR", val: "1.8 km", desc: `Drive with low-beam headlights active across ${i.from} transit stretch.` },
+                    { title: "PRECIPITATION RADAR", val: "3 mm expected", desc: `Light drizzle likely near ${i.to} during peak hours.` },
+                    { title: "BEST DEPARTURE TIME", val: "08:15 AM", desc: "Weather conditions clear up slightly after 8 AM along your route." }
+                ]
+            },
+            running: {
+                title: "Outdoor Running & Fitness",
+                widgets: (i) => [
+                    { title: "OPTIMAL RUN WINDOW", val: "05:30 AM - 06:45 AM", desc: `Ideal air quality and temp for your run from ${i.from} to ${i.to}.` },
+                    { title: "WIND SPEED & GUSTS", val: "10 km/h (W)", desc: "Mild crosswind along your outdoor training loop." },
+                    { title: "HEAT STRESS INDEX", val: "Normal (24°C)", desc: "Low dehydration risk during early morning hours." },
+                    { title: "AQI ALONG ROUTE", val: "110 (Moderate)", desc: `Wear a breathable mask if jogging near main roads in ${i.to}.` }
+                ]
+            },
+            agriculture: {
+                title: "Agricultural Crop Advisory",
+                widgets: (i) => [
+                    { title: "CROP STATUS", val: `${i.crop} (${i.soilStage})`, desc: "Current soil temperature and humidity are favorable." },
+                    { title: "SOIL MOISTURE", val: "36% (Optimal)", desc: "Sufficient root hydration. No immediate irrigation required." },
+                    { title: "RAINFALL FORECAST", val: "6 mm expected", desc: `Beneficial showers predicted for ${i.crop} cultivation area by tonight.` },
+                    { title: "FROST & PEST RISK", val: "Low Risk", desc: "Stable night temperatures protect developing shoots." }
                 ]
             },
             health: {
-                forecast: [
-                    { day: "Today", icon: "☁️", chance: "", tempLow: "22°", tempHigh: "28°", bar: "w-3/4" },
-                    { day: "Sun", icon: "☀️", chance: "", tempLow: "21°", tempHigh: "29°", bar: "w-4/5" },
-                    { day: "Mon", icon: "☀️", chance: "", tempLow: "21°", tempHigh: "30°", bar: "w-1/2" },
-                    { day: "Tue", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "33°", bar: "w-full" },
-                    { day: "Wed", icon: "☀️", chance: "", tempLow: "24°", tempHigh: "34°", bar: "w-full" },
-                    { day: "Thu", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "34°", bar: "w-full" },
-                    { day: "Fri", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "34°", bar: "w-full" },
-                    { day: "Sat", icon: "☀️", chance: "", tempLow: "22°", tempHigh: "33°", bar: "w-full" }
-                ],
-                widgets: [
+                title: "Health & Allergy Advisory",
+                widgets: () => [
                     { title: "AIR QUALITY INDEX", val: "142 Unhealthy", desc: "High particulate matter. Sensitive groups should wear masks." },
                     { title: "POLLEN COUNT", val: "Moderate", desc: "Tree pollen levels elevated today in your local zone." },
                     { title: "UV INDEX", val: "6.5 High", desc: "Sun protection required between 11 AM - 3 PM." },
                     { title: "HUMIDITY LEVEL", val: "84%", desc: "High moisture content. May trigger respiratory discomfort." }
                 ]
             },
-            fitness: {
-                forecast: [
-                    { day: "Today", icon: "☀️", chance: "", tempLow: "22°", tempHigh: "28°", bar: "w-3/4" },
-                    { day: "Sun", icon: "☀️", chance: "", tempLow: "21°", tempHigh: "29°", bar: "w-4/5" },
-                    { day: "Mon", icon: "☀️", chance: "", tempLow: "21°", tempHigh: "30°", bar: "w-1/2" },
-                    { day: "Tue", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "33°", bar: "w-full" },
-                    { day: "Wed", icon: "☀️", chance: "", tempLow: "24°", tempHigh: "34°", bar: "w-full" },
-                    { day: "Thu", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "34°", bar: "w-full" },
-                    { day: "Fri", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "34°", bar: "w-full" },
-                    { day: "Sat", icon: "☀️", chance: "", tempLow: "22°", tempHigh: "33°", bar: "w-full" }
-                ],
-                widgets: [
-                    { title: "BEST RUNNING HOURS", val: "05:30 AM - 07:00 AM", desc: "Optimal temperature window with low pollution." },
-                    { title: "WIND SPEED & GUSTS", val: "12 km/h (W)", desc: "Mild breeze, favorable conditions for outdoor cycling." },
-                    { title: "HEAT STRESS ALERT", val: "Normal", desc: "No extreme heat warnings for your training route." },
-                    { title: "SUNRISE / SUNSET", val: "6:11 AM / 6:12 PM", desc: "Daylight window is optimal for early morning training." }
-                ]
-            },
             beach: {
-                forecast: [
-                    { day: "Today", icon: "🌊", chance: "", tempLow: "22°", tempHigh: "28°", bar: "w-3/4" },
-                    { day: "Sun", icon: "☀️", chance: "", tempLow: "21°", tempHigh: "29°", bar: "w-4/5" },
-                    { day: "Mon", icon: "☀️", chance: "", tempLow: "21°", tempHigh: "30°", bar: "w-1/2" },
-                    { day: "Tue", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "33°", bar: "w-full" },
-                    { day: "Wed", icon: "☀️", chance: "", tempLow: "24°", tempHigh: "34°", bar: "w-full" },
-                    { day: "Thu", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "34°", bar: "w-full" },
-                    { day: "Fri", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "34°", bar: "w-full" },
-                    { day: "Sat", icon: "☀️", chance: "", tempLow: "22°", tempHigh: "33°", bar: "w-full" }
-                ],
-                widgets: [
+                title: "Marine & Beach Intelligence",
+                widgets: () => [
                     { title: "SEA CONDITIONS", val: "Moderate Swells", desc: "Water temp: 27°C. Safe for experienced swimmers." },
                     { title: "TIDE TIMINGS", val: "High Tide: 02:15 PM", desc: "Low tide expected at 08:30 PM tonight." },
                     { title: "WAVE HEIGHT", val: "1.8 Meters", desc: "Good surf conditions near the north shore break." },
                     { title: "UV & WATER SAFETY", val: "High Risk", desc: "Apply water-resistant SPF 50+ sunscreen." }
                 ]
-            },
-            agriculture: {
-                forecast: [
-                    { day: "Today", icon: "🌧️", chance: "90%", tempLow: "22°", tempHigh: "28°", bar: "w-3/4" },
-                    { day: "Sun", icon: "🌧️", chance: "90%", tempLow: "21°", tempHigh: "29°", bar: "w-4/5" },
-                    { day: "Mon", icon: "☁️", chance: "50%", tempLow: "21°", tempHigh: "30°", bar: "w-1/2" },
-                    { day: "Tue", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "33°", bar: "w-full" },
-                    { day: "Wed", icon: "☀️", chance: "", tempLow: "24°", tempHigh: "34°", bar: "w-full" },
-                    { day: "Thu", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "34°", bar: "w-full" },
-                    { day: "Fri", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "34°", bar: "w-full" },
-                    { day: "Sat", icon: "☀️", chance: "", tempLow: "22°", tempHigh: "33°", bar: "w-full" }
-                ],
-                widgets: [
-                    { title: "SOIL MOISTURE", val: "34% Optimal", desc: "Adequate moisture levels for root growth in topsoil." },
-                    { title: "RAINFALL PREDICTION", val: "4 mm expected", desc: "Light localized showers likely by late evening." },
-                    { title: "FROST ALERT", val: "None", desc: "Zero risk of sudden overnight temperature drops." },
-                    { title: "SEASONAL GUIDANCE", val: "Optimal Planting", desc: "Favorable humidity for kharif crop sowing." }
-                ]
             }
         };
+
+        const standardForecast = [
+            { day: "Today", icon: "🌧️", chance: "90%", tempLow: "22°", tempHigh: "28°", bar: "w-3/4" },
+            { day: "Sun", icon: "🌧️", chance: "90%", tempLow: "21°", tempHigh: "29°", bar: "w-4/5" },
+            { day: "Mon", icon: "☁️", chance: "50%", tempLow: "21°", tempHigh: "30°", bar: "w-1/2" },
+            { day: "Tue", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "33°", bar: "w-full" },
+            { day: "Wed", icon: "☀️", chance: "", tempLow: "24°", tempHigh: "34°", bar: "w-full" },
+            { day: "Thu", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "34°", bar: "w-full" },
+            { day: "Fri", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "34°", bar: "w-full" },
+            { day: "Sat", icon: "☀️", chance: "", tempLow: "22°", tempHigh: "33°", bar: "w-full" }
+        ];
+
+        function handlePersonaChange() {
+            const persona = document.getElementById('personaSelect').value;
+            const modal = document.getElementById('inputModal');
+            const title = document.getElementById('modalTitle');
+            const desc = document.getElementById('modalDesc');
+            const fields = document.getElementById('modalFormFields');
+
+            modal.classList.remove('hidden');
+            fields.innerHTML = '';
+
+            if (persona === 'commuter' || persona === 'running') {
+                title.innerText = persona === 'commuter' ? 'Configure Commute Route' : 'Configure Running Route';
+                desc.innerText = 'Enter your starting point and destination to compute route-specific weather and safety warnings.';
+                fields.innerHTML = `
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">From Location:</label>
+                        <input id="inputFrom" type="text" value="${userInputs.from}" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">To Destination:</label>
+                        <input id="inputTo" type="text" value="${userInputs.to}" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none">
+                    </div>
+                `;
+            } else if (persona === 'agriculture') {
+                title.innerText = 'Configure Agricultural Profile';
+                desc.innerText = 'Enter crop type and current growth stage to receive customized soil moisture & rain forecasts.';
+                fields.innerHTML = `
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">Crop Type:</label>
+                        <input id="inputCrop" type="text" value="${userInputs.crop}" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">Soil / Growth Stage:</label>
+                        <input id="inputStage" type="text" value="${userInputs.soilStage}" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none">
+                    </div>
+                `;
+            } else {
+                modal.classList.add('hidden');
+                updateDashboard();
+            }
+        }
+
+        function submitModalInputs() {
+            const persona = document.getElementById('personaSelect').value;
+            if (persona === 'commuter' || persona === 'running') {
+                userInputs.from = document.getElementById('inputFrom').value || 'Connaught Place';
+                userInputs.to = document.getElementById('inputTo').value || 'Cyber City';
+                document.getElementById('sidebarContextSub').innerText = `${userInputs.from} ➔ ${userInputs.to}`;
+            } else if (persona === 'agriculture') {
+                userInputs.crop = document.getElementById('inputCrop').value || 'Wheat';
+                userInputs.soilStage = document.getElementById('inputStage').value || 'Vegetative';
+                document.getElementById('sidebarContextSub').innerText = `Crop: ${userInputs.crop}`;
+            }
+            document.getElementById('inputModal').classList.add('hidden');
+            updateDashboard();
+        }
 
         function updateDashboard() {
             const personaKey = document.getElementById('personaSelect').value;
             const data = personaData[personaKey];
 
-            // Render 10-Day Forecast
+            document.getElementById('headerTitle').innerText = data.title;
+            document.getElementById('activeParamDisplay').innerText = personaKey === 'commuter' || personaKey === 'running' ? `Route: ${userInputs.from} to ${userInputs.to}` : personaKey === 'agriculture' ? `Target Crop: ${userInputs.crop} (${userInputs.soilStage})` : 'Standard Regional Metrics Active';
+
+            // Render 10-day forecast
             const forecastContainer = document.getElementById('forecastList');
             forecastContainer.innerHTML = '';
-            data.forecast.forEach(item => {
+            standardForecast.forEach(item => {
                 const row = document.createElement('div');
                 row.className = 'flex items-center justify-between text-xs';
                 row.innerHTML = `
@@ -335,9 +312,9 @@
             // Render Bento Widgets
             const bentoContainer = document.getElementById('bentoWidgets');
             bentoContainer.innerHTML = '';
-            data.widgets.forEach(w => {
+            data.widgets(userInputs).forEach(w => {
                 const card = document.createElement('div');
-                card.className = 'glass-card p-5 rounded-2xl flex flex-col justify-between';
+                card.className = 'glass-card p-5 rounded-2xl flex flex-col justify-between shadow-lg';
                 card.innerHTML = `
                     <div>
                         <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">${w.title}</div>
@@ -349,7 +326,10 @@
             });
         }
 
-        window.onload = updateDashboard;
+        window.onload = () => {
+            document.getElementById('inputModal').classList.add('hidden');
+            updateDashboard();
+        };
     </script>
 </body>
 </html>
