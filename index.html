@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mausam - Personalized Homepage Prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 font-sans">
+
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col">
+        <!-- App Header -->
+        <header class="bg-blue-600 text-white p-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold">Mausam (मौसम)</h1>
+                <p class="text-xs text-blue-100">Smart Personalized Dashboard</p>
+            </div>
+            <span id="current-temp" class="text-2xl font-semibold">28°C</span>
+        </header>
+
+        <!-- Persona Selection Bar -->
+        <div class="p-4 bg-blue-50 border-b">
+            <label class="block text-xs font-bold text-blue-900 uppercase mb-1">Select Your User Persona:</label>
+            <select id="personaSelect" onchange="updateDashboard()" class="w-full p-2 border rounded-lg bg-white text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="health">health-conscious (AQI, Pollen, UV)</option>
+                <option value="fitness">Outdoor Fitness (Running hours, Wind)</option>
+                <option value="beach">Beachgoers & Surfers (Tides, Waves)</option>
+                <option value="agriculture">Agriculture & Gardeners (Soil, Frost)</option>
+                <option value="commuter">Commuters (Traffic, Visibility)</option>
+            </select>
+        </div>
+
+        <!-- Dynamic Widget Container -->
+        <div id="widgetContainer" class="p-4 flex-1 space-y-4 overflow-y-auto">
+            <!-- Widgets will load here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // Define data/widgets for each persona
+        const personaData = {
+            health: [
+                { title: "Air Quality Index (AQI)", value: "142 (Unhealthy)", desc: "High particulate matter. Wear a mask outdoors.", color: "bg-orange-50 text-orange-800 border-orange-200" },
+                { title: "Pollen Count", value: "Moderate", desc: "Tree pollen levels are elevated today.", color: "bg-amber-50 text-amber-800 border-amber-200" },
+                { title: "UV Index", value: "6.5 (High)", desc: "Sun protection required between 11 AM - 3 PM.", color: "bg-yellow-50 text-yellow-800 border-yellow-200" }
+            ],
+            fitness: [
+                { title: "Best Running Hours", value: "05:30 AM - 07:00 AM", desc: "Optimal temperature and low pollution window.", color: "bg-green-50 text-green-800 border-green-200" },
+                { title: "Wind Speed", value: "12 km/h (W)", desc: "Mild breeze, favorable for outdoor cycling.", color: "bg-blue-50 text-blue-800 border-blue-200" },
+                { title: "Heat Alert", value: "Normal", desc: "No extreme heat warnings for your route.", color: "bg-emerald-50 text-emerald-800 border-emerald-200" }
+            ],
+            beach: [
+                { title: "Sea Conditions", value: "Moderate Swells", desc: "Water temp: 27°C. Safe for experienced swimmers.", color: "bg-cyan-50 text-cyan-800 border-cyan-200" },
+                { title: "Tide Timings", value: "High Tide: 02:15 PM", desc: "Low Tide expected at 08:30 PM.", color: "bg-sky-50 text-sky-800 border-sky-200" },
+                { title: "Wave Height", value: "1.8 Meters", desc: "Good surfing conditions near the shore.", color: "bg-indigo-50 text-indigo-800 border-indigo-200" }
+            ],
+            agriculture: [
+                { title: "Soil Moisture", value: "34% (Optimal)", desc: "Adequate moisture levels for root growth.", color: "bg-lime-50 text-lime-800 border-lime-200" },
+                { title: "Rainfall Prediction", value: "4mm expected", desc: "Light showers likely by late evening.", color: "bg-teal-50 text-teal-800 border-teal-200" },
+                { title: "Frost Alert", value: "None", desc: "No risk of overnight temperature drop.", color: "bg-stone-50 text-stone-800 border-stone-200" }
+            ],
+            commuter: [
+                { title: "Traffic & Weather Sync", value: "Moderate Delays", desc: "Light fog reducing visibility on highway stretch.", color: "bg-red-50 text-red-800 border-red-200" },
+                { title: "Visibility", value: "2.5 km", desc: "Drive with low-beam headlights on.", color: "bg-zinc-50 text-zinc-800 border-zinc-200" },
+                { title: "Precipitation Alert", value: "Clear for Commute", desc: "No rain expected during typical office hours.", color: "bg-blue-50 text-blue-800 border-blue-200" }
+            ]
+        };
+
+        function updateDashboard() {
+            const selected = document.getElementById('personaSelect').value;
+            const container = document.getElementById('widgetContainer');
+            const widgets = personaData[selected];
+
+            container.innerHTML = ''; // Clear current widgets
+
+            widgets.forEach(widget => {
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-xl border ${widget.color} shadow-sm transition-all duration-300`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <h2 class="font-bold text-sm">${widget.title}</h2>
+                        <span class="text-xs px-2 py-0.5 rounded bg-white/60 font-semibold">Live</span>
+                    </div>
+                    <p class="text-xl font-extrabold mb-1">${widget.value}</p>
+                    <p class="text-xs opacity-90">${widget.desc}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Initialize on load
+        window.onload = updateDashboard;
+    </script>
+</body>
+</html>
