@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mausam - Apple Weather Desktop Pro</title>
+    <title>Mausam - Apple Weather Live Integration</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
@@ -45,290 +45,252 @@
 </head>
 <body class="bg-[#0b0e17] text-white font-sans min-h-screen flex justify-center items-center p-0 lg:p-6 overflow-hidden">
 
-    <!-- Desktop App Window Frame -->
-    <div class="w-full max-w-[1280px] h-screen lg:h-[820px] lg:rounded-3xl bg-[#0f131f] shadow-2xl flex overflow-hidden border border-slate-800/80 relative">
+    <div class="w-full max-w-[1280px] h-screen lg:h-[820px] lg:rounded-3xl bg-[#0f131f] shadow-2xl flex overflow-hidden border border-slate-800/80">
         
-        <!-- LEFT SIDEBAR: City List -->
+        <!-- Sidebar: City List -->
         <div class="w-80 bg-[#131722] border-r border-slate-800/80 flex flex-col hidden md:flex">
             <div class="p-4 border-b border-slate-800/60">
                 <div class="flex items-center space-x-2 bg-[#1b2030] px-3.5 py-2 rounded-xl border border-slate-700/50 text-slate-400 text-xs">
                     <span>🔍</span>
-                    <input type="text" placeholder="Search city..." class="bg-transparent focus:outline-none w-full text-white placeholder-slate-500 text-xs">
+                    <input type="text" id="citySearchInput" placeholder="Enter city & press Enter..." onkeypress="handleSearch(event)" class="bg-transparent focus:outline-none w-full text-white placeholder-slate-500 text-xs">
                 </div>
             </div>
 
-            <div class="flex-1 overflow-y-auto p-4 space-y-3">
-                <div class="sidebar-item p-3.5 rounded-2xl cursor-pointer">
+            <div class="flex-1 overflow-y-auto p-4 space-y-3" id="cityListContainer">
+                <!-- Predefined Cities -->
+                <div onclick="selectCity('New Delhi', 28.6139, 77.2090)" class="sidebar-item active p-3.5 rounded-2xl cursor-pointer">
                     <div class="flex justify-between items-start">
-                        <div><div class="text-xs text-slate-400">Chennai</div><div class="text-[10px] text-slate-500 mt-0.5">Home</div></div>
-                        <div class="text-xl font-semibold">29°</div>
+                        <div><div class="text-sm font-bold text-white">New Delhi</div><div class="text-[10px] text-blue-300 mt-0.5">Primary Station</div></div>
+                        <div id="sidebar-New-Delhi" class="text-2xl font-bold">--°</div>
                     </div>
                 </div>
-                <div class="sidebar-item active p-3.5 rounded-2xl cursor-pointer shadow-lg">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <div class="text-sm font-bold text-white" id="sidebarCityName">New Delhi</div>
-                            <div class="text-[10px] text-blue-300 mt-0.5" id="sidebarContextSub">Active Route / Profile</div>
-                        </div>
-                        <div class="text-2xl font-bold">22°</div>
-                    </div>
-                </div>
-                <div class="sidebar-item p-3.5 rounded-2xl cursor-pointer">
+                <div onclick="selectCity('Mumbai', 19.0760, 72.8777)" class="sidebar-item p-3.5 rounded-2xl cursor-pointer">
                     <div class="flex justify-between items-start">
                         <div><div class="text-xs text-slate-400">Mumbai</div><div class="text-[10px] text-slate-500 mt-0.5">Coastal Zone</div></div>
-                        <div class="text-xl font-semibold">27°</div>
+                        <div id="sidebar-Mumbai" class="text-xl font-semibold">--°</div>
+                    </div>
+                </div>
+                <div onclick="selectCity('Bengaluru', 12.9716, 77.5946)" class="sidebar-item p-3.5 rounded-2xl cursor-pointer">
+                    <div class="flex justify-between items-start">
+                        <div><div class="text-xs text-slate-400">Bengaluru</div><div class="text-[10px] text-slate-500 mt-0.5">Southern Hub</div></div>
+                        <div id="sidebar-Bengaluru" class="text-xl font-semibold">--°</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- RIGHT MAIN DASHBOARD CONTENT -->
+        <!-- Main Dashboard View -->
         <div class="flex-1 flex flex-col overflow-y-auto bg-gradient-to-b from-[#161b2c] to-[#0f131f]">
             
-            <!-- Top Header & Persona Selector -->
+            <!-- Top Header & Persona Navigation -->
             <div class="px-8 py-4 border-b border-slate-800/60 flex flex-col sm:flex-row justify-between items-center bg-[#131722]/50 backdrop-blur-md sticky top-0 z-20">
                 <div>
-                    <h1 class="text-xl font-bold tracking-tight" id="headerTitle">New Delhi</h1>
-                    <p class="text-xs text-slate-400" id="headerSubtitle">Drizzle &bull; H: 28° L: 22°</p>
+                    <h1 class="text-xl font-bold tracking-tight" id="activeCityTitle">New Delhi</h1>
+                    <p class="text-xs text-slate-400" id="activeCitySub">Live IMD & Open-Meteo Synced Feed</p>
                 </div>
                 <div class="flex items-center space-x-3 mt-2 sm:mt-0">
-                    <span class="text-xs text-slate-400 font-medium">Persona:</span>
-                    <select id="personaSelect" onchange="handlePersonaChange()" class="bg-[#1c2230] border border-slate-700 text-xs font-semibold px-3 py-1.5 rounded-xl text-blue-400 focus:outline-none cursor-pointer">
-                        <option value="commuter">🚗 Commuter (From/To)</option>
-                        <option value="running">🏃 Running (From/To)</option>
-                        <option value="agriculture">🌱 Agriculture (Crop Info)</option>
-                        <option value="health">🩺 Health & AQI</option>
-                        <option value="beach">🌊 Beach & Tides</option>
+                    <span class="text-xs text-slate-400 font-medium">Domain Page:</span>
+                    <select id="personaSelect" onchange="navigateToPersona()" class="bg-[#1c2230] border border-slate-700 text-xs font-semibold px-3 py-1.5 rounded-xl text-blue-400 focus:outline-none cursor-pointer">
+                        <option value="dashboard" selected>⚡ General Live Weather</option>
+                        <option value="agriculture">🌱 Agriculture & AI Q&A Hub</option>
+                        <option value="commuter">🚗 Commuter & Transit Intelligence</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Main Scrollable Weather Area -->
+            <!-- Scrollable Content -->
             <div class="p-8 space-y-6">
                 
-                <!-- Hero Banner -->
-                <div class="text-center py-2 relative">
-                    <div class="text-6xl font-extralight tracking-tighter mb-1">22°</div>
-                    <div class="text-lg font-medium text-slate-200" id="heroCondition">Drizzle</div>
-                    <div class="text-xs text-slate-400 mt-1" id="activeParamDisplay">Customized profile active</div>
+                <!-- Hero Weather Header -->
+                <div class="text-center py-4">
+                    <div class="text-6xl font-extralight tracking-tighter mb-1" id="liveTemp">--°C</div>
+                    <div class="text-lg font-medium text-slate-200" id="liveCondition">Loading live telemetry...</div>
+                    <div class="text-xs text-slate-400 mt-1" id="liveHighLow">Wind & Atmospheric Data Active</div>
                 </div>
 
-                <!-- Hourly Forecast Bar -->
+                <!-- Hourly Forecast Strip -->
                 <div class="glass-card p-4 rounded-2xl">
-                    <p class="text-xs text-slate-400 mb-3 font-medium" id="hourlyNotice">Cloudy conditions expected around 3AM. Wind gusts up to 18 kph.</p>
-                    <div class="flex justify-between items-center overflow-x-auto space-x-6 pb-2 text-center text-xs">
-                        <div><div class="text-slate-400 mb-2">Now</div><div>🌧️</div><div class="mt-2 font-semibold">22°</div></div>
-                        <div><div class="text-slate-400 mb-2">12AM</div><div>🌧️</div><div class="text-[10px] text-blue-400 mb-1">55%</div><div class="font-semibold">22°</div></div>
-                        <div><div class="text-slate-400 mb-2">2AM</div><div>🌧️</div><div class="text-[10px] text-blue-400 mb-1">35%</div><div class="font-semibold">22°</div></div>
-                        <div><div class="text-slate-400 mb-2">4AM</div><div>☁️</div><div class="font-semibold">22°</div></div>
-                        <div><div class="text-slate-400 mb-2">6AM</div><div>☁️</div><div class="font-semibold">21°</div></div>
-                        <div><div class="text-slate-400 mb-2">8AM</div><div>☀️</div><div class="font-semibold">23°</div></div>
-                        <div><div class="text-slate-400 mb-2">10AM</div><div>☀️</div><div class="font-semibold">26°</div></div>
-                        <div><div class="text-slate-400 mb-2">12PM</div><div>☀️</div><div class="font-semibold">28°</div></div>
+                    <p class="text-xs text-slate-400 mb-3 font-medium" id="hourlySummary">Fetching atmospheric conditions...</p>
+                    <div id="hourlyStrip" class="flex justify-between items-center overflow-x-auto space-x-6 pb-2 text-center text-xs">
+                        <!-- Populated dynamically via JS -->
                     </div>
                 </div>
 
-                <!-- Bento Grid Layout -->
+                <!-- Bento Grid Metrics -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="glass-card p-5 rounded-2xl lg:col-span-1 flex flex-col">
                         <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center space-x-2">
-                            <span>📅</span><span>10-Day Forecast</span>
+                            <span>📅</span><span>Live 7-Day Forecast</span>
                         </div>
-                        <div id="forecastList" class="space-y-3.5 flex-1"></div>
+                        <div id="forecastList" class="space-y-3.5 flex-1">
+                            <!-- Populated dynamically via JS -->
+                        </div>
                     </div>
 
-                    <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6" id="bentoWidgets"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- INPUT MODAL POPUP -->
-        <div id="inputModal" class="absolute inset-0 bg-black/80 backdrop-blur-md z-50 flex justify-center items-center p-4">
-            <div class="glass-card max-w-md w-full p-6 rounded-3xl border border-slate-700 shadow-2xl">
-                <h3 id="modalTitle" class="text-lg font-bold mb-2">Configure Commute Route</h3>
-                <p id="modalDesc" class="text-xs text-slate-400 mb-4">Provide starting point and destination to get tailored weather and visibility updates.</p>
-                
-                <div id="modalFormFields" class="space-y-4 mb-6">
-                    <!-- Dynamic fields injected here -->
+                    <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6" id="bentoWidgets">
+                        <!-- Dynamic Metric Cards -->
+                    </div>
                 </div>
 
-                <button onclick="submitModalInputs()" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 font-semibold text-xs tracking-wider uppercase transition shadow-lg shadow-blue-600/30">
-                    Generate Personalized Weather &rarr;
-                </button>
             </div>
         </div>
     </div>
 
     <script>
-        let userInputs = {
-            from: "Connaught Place",
-            to: "Gurugram Cyber City",
-            crop: "Wheat",
-            soilStage: "Vegetative Phase"
-        };
+        // Default coordinates for New Delhi
+        let currentLat = 28.6139;
+        let currentLon = 77.2090;
+        let currentCityName = "New Delhi";
 
-        const personaData = {
-            commuter: {
-                title: "Commuter Transit Intelligence",
-                widgets: (i) => [
-                    { title: "ROUTE WEATHER SYNC", val: "Moderate Delays", desc: `Fog & mist reported between ${i.from} and ${i.to}. Low visibility warning.` },
-                    { title: "VISIBILITY CORRIDOR", val: "1.8 km", desc: `Drive with low-beam headlights active across ${i.from} transit stretch.` },
-                    { title: "PRECIPITATION RADAR", val: "3 mm expected", desc: `Light drizzle likely near ${i.to} during peak hours.` },
-                    { title: "BEST DEPARTURE TIME", val: "08:15 AM", desc: "Weather conditions clear up slightly after 8 AM along your route." }
-                ]
-            },
-            running: {
-                title: "Outdoor Running & Fitness",
-                widgets: (i) => [
-                    { title: "OPTIMAL RUN WINDOW", val: "05:30 AM - 06:45 AM", desc: `Ideal air quality and temp for your run from ${i.from} to ${i.to}.` },
-                    { title: "WIND SPEED & GUSTS", val: "10 km/h (W)", desc: "Mild crosswind along your outdoor training loop." },
-                    { title: "HEAT STRESS INDEX", val: "Normal (24°C)", desc: "Low dehydration risk during early morning hours." },
-                    { title: "AQI ALONG ROUTE", val: "110 (Moderate)", desc: `Wear a breathable mask if jogging near main roads in ${i.to}.` }
-                ]
-            },
-            agriculture: {
-                title: "Agricultural Crop Advisory",
-                widgets: (i) => [
-                    { title: "CROP STATUS", val: `${i.crop} (${i.soilStage})`, desc: "Current soil temperature and humidity are favorable." },
-                    { title: "SOIL MOISTURE", val: "36% (Optimal)", desc: "Sufficient root hydration. No immediate irrigation required." },
-                    { title: "RAINFALL FORECAST", val: "6 mm expected", desc: `Beneficial showers predicted for ${i.crop} cultivation area by tonight.` },
-                    { title: "FROST & PEST RISK", val: "Low Risk", desc: "Stable night temperatures protect developing shoots." }
-                ]
-            },
-            health: {
-                title: "Health & Allergy Advisory",
-                widgets: () => [
-                    { title: "AIR QUALITY INDEX", val: "142 Unhealthy", desc: "High particulate matter. Sensitive groups should wear masks." },
-                    { title: "POLLEN COUNT", val: "Moderate", desc: "Tree pollen levels elevated today in your local zone." },
-                    { title: "UV INDEX", val: "6.5 High", desc: "Sun protection required between 11 AM - 3 PM." },
-                    { title: "HUMIDITY LEVEL", val: "84%", desc: "High moisture content. May trigger respiratory discomfort." }
-                ]
-            },
-            beach: {
-                title: "Marine & Beach Intelligence",
-                widgets: () => [
-                    { title: "SEA CONDITIONS", val: "Moderate Swells", desc: "Water temp: 27°C. Safe for experienced swimmers." },
-                    { title: "TIDE TIMINGS", val: "High Tide: 02:15 PM", desc: "Low tide expected at 08:30 PM tonight." },
-                    { title: "WAVE HEIGHT", val: "1.8 Meters", desc: "Good surf conditions near the north shore break." },
-                    { title: "UV & WATER SAFETY", val: "High Risk", desc: "Apply water-resistant SPF 50+ sunscreen." }
-                ]
-            }
-        };
+        async function fetchLiveWeather(lat, lon, cityName) {
+            currentLat = lat;
+            currentLon = lon;
+            currentCityName = cityName;
 
-        const standardForecast = [
-            { day: "Today", icon: "🌧️", chance: "90%", tempLow: "22°", tempHigh: "28°", bar: "w-3/4" },
-            { day: "Sun", icon: "🌧️", chance: "90%", tempLow: "21°", tempHigh: "29°", bar: "w-4/5" },
-            { day: "Mon", icon: "☁️", chance: "50%", tempLow: "21°", tempHigh: "30°", bar: "w-1/2" },
-            { day: "Tue", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "33°", bar: "w-full" },
-            { day: "Wed", icon: "☀️", chance: "", tempLow: "24°", tempHigh: "34°", bar: "w-full" },
-            { day: "Thu", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "34°", bar: "w-full" },
-            { day: "Fri", icon: "☀️", chance: "", tempLow: "23°", tempHigh: "34°", bar: "w-full" },
-            { day: "Sat", icon: "☀️", chance: "", tempLow: "22°", tempHigh: "33°", bar: "w-full" }
-        ];
+            document.getElementById('activeCityTitle').innerText = cityName;
+            document.getElementById('activeCitySub').innerText = "Fetching live telemetry...";
 
-        function handlePersonaChange() {
-            const persona = document.getElementById('personaSelect').value;
-            const modal = document.getElementById('inputModal');
-            const title = document.getElementById('modalTitle');
-            const desc = document.getElementById('modalDesc');
-            const fields = document.getElementById('modalFormFields');
+            try {
+                // Free public weather API endpoint (Open-Meteo) requiring no API key
+                const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code,precipitation_probability&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto`);
+                const data = await response.json();
 
-            modal.classList.remove('hidden');
-            fields.innerHTML = '';
-
-            if (persona === 'commuter' || persona === 'running') {
-                title.innerText = persona === 'commuter' ? 'Configure Commute Route' : 'Configure Running Route';
-                desc.innerText = 'Enter your starting point and destination to compute route-specific weather and safety warnings.';
-                fields.innerHTML = `
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">From Location:</label>
-                        <input id="inputFrom" type="text" value="${userInputs.from}" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">To Destination:</label>
-                        <input id="inputTo" type="text" value="${userInputs.to}" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none">
-                    </div>
-                `;
-            } else if (persona === 'agriculture') {
-                title.innerText = 'Configure Agricultural Profile';
-                desc.innerText = 'Enter crop type and current growth stage to receive customized soil moisture & rain forecasts.';
-                fields.innerHTML = `
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">Crop Type:</label>
-                        <input id="inputCrop" type="text" value="${userInputs.crop}" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">Soil / Growth Stage:</label>
-                        <input id="inputStage" type="text" value="${userInputs.soilStage}" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none">
-                    </div>
-                `;
-            } else {
-                modal.classList.add('hidden');
-                updateDashboard();
+                updateUI(data, cityName);
+            } catch (error) {
+                console.error("Error fetching live weather:", error);
+                document.getElementById('activeCitySub').innerText = "Failed to load live feed. Check connection.";
             }
         }
 
-        function submitModalInputs() {
-            const persona = document.getElementById('personaSelect').value;
-            if (persona === 'commuter' || persona === 'running') {
-                userInputs.from = document.getElementById('inputFrom').value || 'Connaught Place';
-                userInputs.to = document.getElementById('inputTo').value || 'Cyber City';
-                document.getElementById('sidebarContextSub').innerText = `${userInputs.from} ➔ ${userInputs.to}`;
-            } else if (persona === 'agriculture') {
-                userInputs.crop = document.getElementById('inputCrop').value || 'Wheat';
-                userInputs.soilStage = document.getElementById('inputStage').value || 'Vegetative';
-                document.getElementById('sidebarContextSub').innerText = `Crop: ${userInputs.crop}`;
-            }
-            document.getElementById('inputModal').classList.add('hidden');
-            updateDashboard();
+        function getWeatherCondition(code) {
+            // WMO Weather interpretation codes
+            if (code === 0) return { text: "Clear Sky", icon: "☀️" };
+            if (code >= 1 && code <= 3) return { text: "Partly Cloudy", icon: "⛅" };
+            if (code >= 51 && code <= 67) return { text: "Drizzle & Rain", icon: "🌧️" };
+            if (code >= 71 && code <= 77) return { text: "Snowfall", icon: "❄️" };
+            if (code >= 95) return { text: "Thunderstorm", icon: "⚡" };
+            return { text: "Overcast", icon: "☁️" };
         }
 
-        function updateDashboard() {
-            const personaKey = document.getElementById('personaSelect').value;
-            const data = personaData[personaKey];
+        function updateUI(data, cityName) {
+            const current = data.current;
+            const daily = data.daily;
+            const hourly = data.hourly;
 
-            document.getElementById('headerTitle').innerText = data.title;
-            document.getElementById('activeParamDisplay').innerText = personaKey === 'commuter' || personaKey === 'running' ? `Route: ${userInputs.from} to ${userInputs.to}` : personaKey === 'agriculture' ? `Target Crop: ${userInputs.crop} (${userInputs.soilStage})` : 'Standard Regional Metrics Active';
+            const condition = getWeatherCondition(current.weather_code);
 
-            // Render 10-day forecast
-            const forecastContainer = document.getElementById('forecastList');
-            forecastContainer.innerHTML = '';
-            standardForecast.forEach(item => {
+            // Update Hero Header
+            document.getElementById('liveTemp').innerText = `${Math.round(current.temperature_2m)}°`;
+            document.getElementById('liveCondition').innerText = condition.text;
+            document.getElementById('activeCitySub').innerText = `Live Lat: ${currentLat.toFixed(2)}, Lon: ${currentLon.toFixed(2)}`;
+            document.getElementById('liveHighLow').innerText = `H: ${Math.round(daily.temperature_2m_max[0])}° • L: ${Math.round(daily.temperature_2m_min[0])}°`;
+            document.getElementById('hourlySummary').innerText = `Atmospheric pressure stable. Current wind speed is ${current.wind_speed_10m} km/h.`;
+
+            // Update Hourly Strip
+            const hourlyStrip = document.getElementById('hourlyStrip');
+            hourlyStrip.innerHTML = '';
+            for (let i = 0; i < 8; i++) {
+                const hourTime = new Date(hourly.time[i]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const hrCond = getWeatherCondition(hourly.weather_code[i]);
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <div class="text-slate-400 mb-2">${hourTime}</div>
+                    <div class="text-base">${hrCond.icon}</div>
+                    <div class="text-[10px] text-blue-400 mb-1">${hourly.precipitation_probability[i]}%</div>
+                    <div class="font-semibold">${Math.round(hourly.temperature_2m[i])}°</div>
+                `;
+                hourlyStrip.appendChild(div);
+            }
+
+            // Update 7-Day Forecast
+            const forecastList = document.getElementById('forecastList');
+            forecastList.innerHTML = '';
+            for (let i = 0; i < 7; i++) {
+                const dayLabel = i === 0 ? "Today" : new Date(daily.time[i]).toLocaleDateString('en', { weekday: 'short' });
+                const dayCond = getWeatherCondition(daily.weather_code[i]);
                 const row = document.createElement('div');
                 row.className = 'flex items-center justify-between text-xs';
                 row.innerHTML = `
-                    <span class="w-12 text-slate-400 font-medium">${item.day}</span>
-                    <span class="text-sm">${item.icon}</span>
-                    <span class="text-[10px] text-blue-400 font-semibold w-8 text-center">${item.chance}</span>
-                    <span class="text-slate-400">${item.tempLow}</span>
+                    <span class="w-12 text-slate-400 font-medium">${dayLabel}</span>
+                    <span class="text-sm">${dayCond.icon}</span>
+                    <span class="text-slate-400">${Math.round(daily.temperature_2m_min[i])}°</span>
                     <div class="w-24 h-1.5 bg-slate-800 rounded-full overflow-hidden mx-2">
-                        <div class="h-full bg-gradient-to-r from-blue-400 to-amber-400 rounded-full ${item.bar}"></div>
+                        <div class="h-full bg-gradient-to-r from-blue-400 to-amber-400 rounded-full w-3/4"></div>
                     </div>
-                    <span class="font-semibold">${item.tempHigh}</span>
+                    <span class="font-semibold">${Math.round(daily.temperature_2m_max[i])}°</span>
                 `;
-                forecastContainer.appendChild(row);
-            });
+                forecastList.appendChild(row);
+            }
 
-            // Render Bento Widgets
+            // Update Bento Widgets
             const bentoContainer = document.getElementById('bentoWidgets');
-            bentoContainer.innerHTML = '';
-            data.widgets(userInputs).forEach(w => {
-                const card = document.createElement('div');
-                card.className = 'glass-card p-5 rounded-2xl flex flex-col justify-between shadow-lg';
-                card.innerHTML = `
+            bentoContainer.innerHTML = `
+                <div class="glass-card p-5 rounded-2xl flex flex-col justify-between">
                     <div>
-                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">${w.title}</div>
-                        <div class="text-xl font-bold tracking-tight text-white mb-2">${w.val}</div>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">HUMIDITY LEVEL</div>
+                        <div class="text-xl font-bold text-white mb-2">${current.relative_humidity_2m}%</div>
                     </div>
-                    <div class="text-xs text-slate-400 border-t border-slate-800/80 pt-3 mt-2 leading-relaxed">${w.desc}</div>
-                `;
-                bentoContainer.appendChild(card);
-            });
+                    <div class="text-xs text-slate-400 border-t border-slate-800/80 pt-3 mt-2">Dew point is comfortable for outdoor activities.</div>
+                </div>
+                <div class="glass-card p-5 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">FEELS LIKE TEMP</div>
+                        <div class="text-xl font-bold text-white mb-2">${Math.round(current.apparent_temperature)}°C</div>
+                    </div>
+                    <div class="text-xs text-slate-400 border-t border-slate-800/80 pt-3 mt-2">Wind chill factor is minimal at current speeds.</div>
+                </div>
+                <div class="glass-card p-5 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">WIND VELOCITY</div>
+                        <div class="text-xl font-bold text-white mb-2">${current.wind_speed_10m} km/h</div>
+                    </div>
+                    <div class="text-xs text-slate-400 border-t border-slate-800/80 pt-3 mt-2">Favorable aerodynamic conditions across sectors.</div>
+                </div>
+                <div class="glass-card p-5 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">PRECIPITATION</div>
+                        <div class="text-xl font-bold text-white mb-2">${current.precipitation} mm</div>
+                    </div>
+                    <div class="text-xs text-slate-400 border-t border-slate-800/80 pt-3 mt-2">Live gauge reading from regional telemetry station.</div>
+                </div>
+            `;
         }
 
+        function selectCity(name, lat, lon) {
+            fetchLiveWeather(lat, lon, name);
+        }
+
+        async function handleSearch(e) {
+            if (e.key === 'Enter') {
+                const query = e.target.value.trim();
+                if (!query) return;
+                try {
+                    const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1`);
+                    const geoData = await geoRes.json();
+                    if (geoData.results && geoData.results.length > 0) {
+                        const loc = geoData.results[0];
+                        fetchLiveWeather(loc.latitude, loc.longitude, loc.name);
+                    } else {
+                        alert("City not found. Try another location.");
+                    }
+                } catch (err) {
+                    console.error("Geocoding error:", err);
+                }
+            }
+        }
+
+        function navigateToPersona() {
+            const val = document.getElementById('personaSelect').value;
+            if (val === 'agriculture') {
+                window.location.href = 'agriculture.html';
+            } else if (val === 'commuter') {
+                window.location.href = 'commuter.html';
+            }
+        }
+
+        // Initialize with New Delhi on load
         window.onload = () => {
-            document.getElementById('inputModal').classList.add('hidden');
-            updateDashboard();
+            fetchLiveWeather(28.6139, 77.2090, "New Delhi");
         };
     </script>
 </body>
